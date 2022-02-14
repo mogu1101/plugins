@@ -1,3 +1,11 @@
+## 0.10.0+4
+
+* Removes dependency on `meta`.
+
+## 0.10.0+3
+
+* Updated URL to the `google_sign_in` package in README.
+
 ## 0.10.0+2
 
 * Add `implements` to pubspec.

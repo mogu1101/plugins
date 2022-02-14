@@ -2,6 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'dart:convert';
 import 'dart:io' as io;
 
 import 'package:args/command_runner.dart';
@@ -60,7 +61,8 @@ void main() {
       final String output =
           '''${includeBanner ? updateBanner : ''}[${devices.join(',')}]''';
 
-      final MockProcess mockDevicesProcess = MockProcess(stdout: output);
+      final MockProcess mockDevicesProcess =
+          MockProcess(stdout: output, stdoutEncoding: utf8);
       processRunner
               .mockProcessesForExecutable[getFlutterCommand(mockPlatform)] =
           <io.Process>[mockDevicesProcess];
@@ -573,6 +575,58 @@ void main() {
                   'web-server',
                   '--web-port=7357',
                   '--browser-name=chrome',
+                  '--driver',
+                  'test_driver/plugin_test.dart',
+                  '--target',
+                  'test_driver/plugin.dart'
+                ],
+                pluginExampleDirectory.path),
+          ]));
+    });
+
+    test('driving a web plugin with CHROME_EXECUTABLE', () async {
+      final Directory pluginDirectory = createFakePlugin(
+        'plugin',
+        packagesDir,
+        extraFiles: <String>[
+          'example/test_driver/plugin_test.dart',
+          'example/test_driver/plugin.dart',
+        ],
+        platformSupport: <String, PlatformDetails>{
+          kPlatformWeb: const PlatformDetails(PlatformSupport.inline),
+        },
+      );
+
+      final Directory pluginExampleDirectory =
+          pluginDirectory.childDirectory('example');
+
+      mockPlatform.environment['CHROME_EXECUTABLE'] = '/path/to/chrome';
+
+      final List<String> output = await runCapturingPrint(runner, <String>[
+        'drive-examples',
+        '--web',
+      ]);
+
+      expect(
+        output,
+        containsAllInOrder(<Matcher>[
+          contains('Running for plugin'),
+          contains('No issues found!'),
+        ]),
+      );
+
+      expect(
+          processRunner.recordedCalls,
+          orderedEquals(<ProcessCall>[
+            ProcessCall(
+                getFlutterCommand(mockPlatform),
+                const <String>[
+                  'drive',
+                  '-d',
+                  'web-server',
+                  '--web-port=7357',
+                  '--browser-name=chrome',
+                  '--chrome-binary=/path/to/chrome',
                   '--driver',
                   'test_driver/plugin_test.dart',
                   '--target',

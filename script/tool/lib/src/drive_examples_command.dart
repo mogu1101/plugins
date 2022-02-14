@@ -120,7 +120,9 @@ class DriveExamplesCommand extends PackageLoopingCommand {
           '-d',
           'web-server',
           '--web-port=7357',
-          '--browser-name=chrome'
+          '--browser-name=chrome',
+          if (platform.environment.containsKey('CHROME_EXECUTABLE'))
+            '--chrome-binary=${platform.environment['CHROME_EXECUTABLE']}',
         ],
       if (getBoolArg(kPlatformWindows))
         kPlatformWindows: <String>['-d', 'windows'],
@@ -133,7 +135,7 @@ class DriveExamplesCommand extends PackageLoopingCommand {
 
   @override
   Future<PackageResult> runForPackage(RepositoryPackage package) async {
-    if (package.directory.basename.endsWith('_platform_interface') &&
+    if (package.isPlatformInterface &&
         !package.getSingleExampleDeprecated().directory.existsSync()) {
       // Platform interface packages generally aren't intended to have
       // examples, and don't need integration tests, so skip rather than fail.

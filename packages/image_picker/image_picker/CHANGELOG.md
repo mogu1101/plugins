@@ -1,3 +1,38 @@
+## 0.8.4+8
+
+* Configures the `UIImagePicker` to default to gallery instead of camera when
+picking multiple images on pre-iOS 14 devices.
+
+## 0.8.4+7
+
+* Refactors unit test to expose private interface via a separate test header instead of the inline declaration.
+
+## 0.8.4+6
+
+* Fixes minor type issues in iOS implementation.
+
+## 0.8.4+5
+
+* Improves the documentation on handling MainActivity being killed by the Android OS.
+* Updates Android compileSdkVersion to 31.
+* Fix iOS RunnerUITests search paths.
+
+## 0.8.4+4
+
+* Fix typos in README.md.
+
+## 0.8.4+3
+
+* Suppress a unchecked cast build warning.
+
+## 0.8.4+2
+
+* Update minimum Flutter SDK to 2.5 and iOS deployment target to 9.0.
+
+## 0.8.4+1
+
+* Fix README Example for `ImagePickerCache` to cache multiple files.
+
 ## 0.8.4
 
 * Update `ImagePickerCache` to cache multiple files.
